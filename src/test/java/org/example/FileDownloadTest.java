@@ -56,11 +56,11 @@ public class FileDownloadTest {
 
         // ========== 2. Сохранение файла ========
         // Создаем временный путь
-//        Path temDir = Files.createTempDirectory("playwright-downloads");
-//        Path filePath = temDir.resolve(download.suggestedFilename());
+        Path temDir = Files.createTempDirectory("playwright-downloads");
+        Path filePath = temDir.resolve(download.suggestedFilename());
 
-        Path dir = Path.of("src/test/java/org/example/downloads");
-        Path filePath = dir.resolve(download.suggestedFilename());
+//        Path dir = Path.of("src/test/java/org/example/downloads");
+//        Path filePath = dir.resolve(download.suggestedFilename());
 
         // Сохраняем файл
         download.saveAs(filePath);
@@ -89,6 +89,6 @@ public class FileDownloadTest {
 
 
         // Удаляем временные файлы (в реальных тестах не нужно)
-//        Files.deleteIfExists(filePath);
+        Files.deleteIfExists(filePath);
     }
 }

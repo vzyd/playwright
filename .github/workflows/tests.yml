@@ -1,2 +1,39 @@
-on:
+# GitHub Actions for running tests
+
+name: Java Tests
+on: [push] # Триггер на любой пуш в репозиторий
+
 jobs:
+  run-common-tests:
+    runs-on: ubuntu-latest # Используем последний Убунту
+
+    steps:
+      - uses: actions/checkout@v4 # Клонируем репозиторий
+      # Установка Java 21
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin # Дистрибутив Eclipce Temurin
+          java-version: "21"
+
+      # Кеширование зависимостей Maven
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository # Путь к локальному репозиторию Мавен
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Установка системных зависимостей
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgbm-dev x11-xkb-utils
+
+      # Запуск всех тестов, кроме TodoApiDockerTest
+      - name: Run tests
+        run: |
+          export DISPLAY=:0
+          Xvfb :0 -screen 0 1280x720x24 >/dev/nul 2>&1 &
+          mvn clean test -B -Dtest=!TodoApiDockerTest # Исключаем тест из Docker
