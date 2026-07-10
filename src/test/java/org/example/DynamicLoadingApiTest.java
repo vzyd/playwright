@@ -34,7 +34,7 @@ public class DynamicLoadingApiTest {
     void setup() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(
-                new BrowserType.LaunchOptions().setHeadless(false)
+                new BrowserType.LaunchOptions().setHeadless(true)
                         .setSlowMo(5000)
         );
         context = browser.newContext();
