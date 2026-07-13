@@ -38,4 +38,14 @@ jobs:
           Xvfb :0 -screen 0 1280x720x24 >/dev/nul 2>&1 &
           # mvn clean test -B -Dtest=!TodoApiDockerTest # Исключаем тест из Docker
           mvn clean test -B -Dtest=!ParallelExecutionTest
-          
+      - name: Generate Allure Report
+        if: always() # Генерация сработает даже если тесты упали
+        run: mvn allure:report
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin/ # Путь к сгенерированному отчету
+          retention-days: 30
+
